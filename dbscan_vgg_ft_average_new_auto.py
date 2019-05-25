@@ -7,7 +7,6 @@
 
 import argparse
 import os
-import argparse
 import logging
 import random
 import sys

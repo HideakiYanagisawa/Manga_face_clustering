@@ -1,10 +1,8 @@
 # Manga_face_clustering
 
-Enviroment
-
-Python 3
-
-Pytorch
+## Enviroment
+ - Python2
+ - [Pytorch](http://pytorch.org/)
 
 1. Create manga face dataset
 
@@ -12,7 +10,7 @@ Download manga images from http://www.manga109.org/ja/index.html
 
 Extract characters' face images using 
 
-References
+## References
 
 DeepCluster
 https://github.com/facebookresearch/deepcluster

@@ -7,7 +7,7 @@
 
 
 to do
-1.データセットの構成を記述する。
+1.データセットの構成を記述する
 2.Deepcluster動作確認
 
 ## 1. Create manga face dataset

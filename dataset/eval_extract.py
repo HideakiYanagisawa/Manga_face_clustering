@@ -1,10 +1,4 @@
 import os
-#from keras.applications.vgg16 import VGG16
-#from keras.preprocessing.image import ImageDataGenerator
-#from keras.models import Sequential, Model
-#from keras.layers import Input, Activation, Dropout, Flatten, Dense, Conv2D, MaxPooling2D
-#from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
-#from keras import optimizers
 import numpy as np
 import glob
 import shutil

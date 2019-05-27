@@ -290,7 +290,7 @@ def main():
     cudnn.benchmark = True
     model.eval()
 
-    datasets = glob('/faces/evaluation/*')
+    datasets = glob('/dataset/eval_images/*')
 
     V_MEASUREs = [0.0] * len(datasets)
     ARIs = [0.0] * len(datasets)
@@ -300,7 +300,6 @@ def main():
     for filepath in datasets:
         filepath = filepath + '/'
         print filepath
-        #filepath = '/faces_83/evaluation/' + filename + '/'
         class_list = glob(filepath+'*')
         class_list = [os.path.basename(r) for r in class_list]
         class_num = len(class_list)

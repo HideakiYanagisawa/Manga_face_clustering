@@ -14,6 +14,8 @@ if __name__ == '__main__':
     num = 0
     with open(image_set_file) as f:
         file_index = [x.strip() for x in f.readlines()]
+    if not os.path.exists('train_images'):
+        os.mkdir('train_images')
     for index in file_index:
         print index
         tree = ET.parse(data_path + '/Annotations/' + index + '.xml')
@@ -42,7 +44,7 @@ if __name__ == '__main__':
             num_ind = int(page.get('index'))
             image_index = data_path + '/images/' + index + '/' + '{0:03d}'.format(num_ind) + '.jpg'
             #print image_index
-            im = load_img(image_index)
+            im = Image.open(image_index)
             width = im.size[0]
             height = im.size[1]
             for obj in page.findall('face'):

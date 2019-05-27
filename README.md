@@ -7,7 +7,10 @@
 
 ## 1. Create manga face dataset
 * Download images from http://www.manga109.org/ja/index.html
-* Extract characters' face images using extract_faces.py
+* Write manga titles using trainig and evaluation and save as 'finetune.txt' and 'eval.txt'
+* Extract characters' face images for training using train_extract.py
+* Split trainig images into 'train_images' and 'test_images' using setup.py
+* Extract characters' face images for evaluation using eval_extract.py
 
 ## 2. Fine-Tuning
 * Fine tune VGG16 model for manga facial images using finetune/finetune_vgg.py

@@ -1,10 +1,4 @@
 import os
-from keras.applications.vgg16 import VGG16
-from keras.preprocessing.image import ImageDataGenerator
-from keras.models import Sequential, Model
-from keras.layers import Input, Activation, Dropout, Flatten, Dense, Conv2D, MaxPooling2D
-from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
-from keras import optimizers
 import numpy as np
 import glob
 import shutil
@@ -12,16 +6,17 @@ from PIL import Image, ImageFilter
 import xml.etree.ElementTree as ET
 
 if __name__ == '__main__':
-    image_set_file = '/home/dl-box/fine-tune/VOC2012/ImageSets/Main/eval.txt'
-    data_path = '/home/dl-box/fine-tune/VOC2012'
+    image_set_file = 'eval.txt'
+    data_path = '/home/dl-box/fine-tune/Manga109'
     images = [] # images
     classes = [] # character numbers 
     labels = [] # label of character images
     num = 0
     with open(image_set_file) as f:
         file_index = [x.strip() for x in f.readlines()]
-    if not os.path.exists('eval_images'):
-        os.mkdir('eval_images')
+    filepath = './eval_images'
+    if not os.path.exists(file_path):
+        os.mkdir(file_path)
     for index in file_index:
         print index
         os.mkdir('./eval_images/' + index)
@@ -46,13 +41,13 @@ if __name__ == '__main__':
             #if labels_title.count(i) >= 10:
             if labels_title.count(i) >= 1:
                 classes.append(classes_title[i])
-                os.mkdir('./eval_images/' + index + '/' + classes_title[i])
+                os.mkdir(file_path + '/' + index + '/' + classes_title[i])
 
         for page in root[1]:
             num_ind = int(page.get('index'))
             image_index = data_path + '/images/' + index + '/' + '{0:03d}'.format(num_ind) + '.jpg'
             #print image_index
-            im = load_img(image_index)
+            im = Image.open(image_index)
             width = im.size[0]
             height = im.size[1]
             for obj in page.findall('face'):
@@ -71,6 +66,6 @@ if __name__ == '__main__':
                         re_x2 = int(min(width, x2 + bbox_width/2))
                         re_y2 = int(min(height, y2 + bbox_height/2))
                         im_bbox = im.crop((re_x1, re_y1, re_x2, re_y2))
-                        im_bbox.save('./eval_images/' + index + '/' + cls + '/' + '{0:06d}'.format(num) + '.jpg', 'jpeg')
+                        im_bbox.save(file_path + '/' + index + '/' + cls + '/' + '{0:06d}'.format(num) + '.jpg', 'jpeg')
                         num += 1
 

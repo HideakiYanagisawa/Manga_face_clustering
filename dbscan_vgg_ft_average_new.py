@@ -276,9 +276,6 @@ def main():
 
     args = parser.parse_args()
 
-
-
-
     layer = args.layer
     layer_num = args.layer_num
 

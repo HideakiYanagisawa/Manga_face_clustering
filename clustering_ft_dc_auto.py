@@ -285,8 +285,7 @@ def clustering_dbscan(result, MINPTS, labels_true):
 
 def main():
 
-    parser = argparse.ArgumentParser(description="""Train linear classifier on top
-                                 of frozen convolutional layers of an VGG16.""")
+    parser = argparse.ArgumentParser(description="""Extract image features of manga facial images.""")
     
     parser.add_argument('--model', type=str, help='path to model')
     parser.add_argument('--layer', type=str, help='layer type')

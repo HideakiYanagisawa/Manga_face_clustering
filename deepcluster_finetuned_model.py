@@ -17,7 +17,7 @@ import torchvision.datasets as datasets
 import torchvision.models as models
 
 import clustering
-from util import AverageMeter, Logger, UnifLabelSampler, load_model
+from util import AverageMeter, Logger, UnifLabelSampler
 
 parser = argparse.ArgumentParser(description='PyTorch Implementation of DeepCluster')
 

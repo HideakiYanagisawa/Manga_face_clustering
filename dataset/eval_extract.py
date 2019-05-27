@@ -46,8 +46,6 @@ if __name__ == '__main__':
         for page in root[1]:
             num_ind = int(page.get('index'))
             image_index = data_path + '/images/' + index + '/' + '{0:03d}'.format(num_ind) + '.jpg'
-            #print image_index
-            #im = load_img(image_index)
             im = Image.open(image_index)
             width = im.size[0]
             height = im.size[1]

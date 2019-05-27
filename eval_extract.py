@@ -19,7 +19,7 @@ if __name__ == '__main__':
         os.mkdir(file_path)
     for index in file_index:
         print index
-        os.mkdir('./eval_images/' + index)
+        os.mkdir(file_path + '/' + index)
         tree = ET.parse(data_path + '/Annotations/' + index + '.xml')
         root = tree.getroot()
         classes_title = []

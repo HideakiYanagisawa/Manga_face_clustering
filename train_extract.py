@@ -14,8 +14,9 @@ if __name__ == '__main__':
     num = 0
     with open(image_set_file) as f:
         file_index = [x.strip() for x in f.readlines()]
-    if not os.path.exists('train_images'):
-        os.mkdir('train_images')
+    file_path = './train_imges'
+    if not os.path.exists(file_path):
+        os.mkdir(file_path)
     for index in file_index:
         print index
         tree = ET.parse(data_path + '/Annotations/' + index + '.xml')
@@ -38,7 +39,7 @@ if __name__ == '__main__':
         for i in range(len(classes_title)):
             if labels_title.count(i) >= 10:
                 classes.append(classes_title[i])
-                os.mkdir('./train_images/' + classes_title[i])
+                os.mkdir(file_path + classes_title[i])
 
         for page in root[1]:
             num_ind = int(page.get('index'))
@@ -63,6 +64,6 @@ if __name__ == '__main__':
                         re_x2 = int(min(width, x2 + bbox_width/2))
                         re_y2 = int(min(height, y2 + bbox_height/2))
                         im_bbox = im.crop((re_x1, re_y1, re_x2, re_y2))
-                        im_bbox.save('./train_images/' + cls + '/' + '{0:06d}'.format(num) + '.jpg', 'jpeg')
+                        im_bbox.save(file_path + cls + '/' + '{0:06d}'.format(num) + '.jpg', 'jpeg')
                         num += 1
 

@@ -230,7 +230,7 @@ def main():
     model.eval()
 
     filename = args.dataset
-    filepath = '/faces_83/evaluation/' + filename + '/'
+    filepath = '/dataset/eval_images/' + filename + '/'
     #print filepath
     class_list = glob(filepath+'*')
     class_list = [os.path.basename(r) for r in class_list]

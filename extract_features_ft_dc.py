@@ -96,7 +96,7 @@ class ListDataset(torch.utils.data.Dataset):
     def __len__(self):
         return len(self.images_list)
 
-def extract_features_to_disk(image_paths, model, batch_size, workers, reglog, layer):
+def extract_features(image_paths, model, batch_size, workers, reglog, layer):
     # Data loading code
     normalize = transforms.Normalize(
         mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
@@ -247,7 +247,7 @@ def main():
     # logistic regression
     reglog = RegLog(layer_num, 10000).cuda()
 
-    reduction_result=extract_features_to_disk(images, model, args.batch_size,
+    reduction_result=extract_features(images, model, args.batch_size,
                                               args.workers, reglog, layer)
 
     colormap=['red', 'blue', 'green', 'yellow', 'orange', 'pink', 'brown', 'purple', 'aqua', 'lime', 'gray', 'aqua', 'black', 'peru', 'indigo']

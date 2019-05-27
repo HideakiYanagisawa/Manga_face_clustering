@@ -32,9 +32,6 @@ from sklearn.neighbors import NearestNeighbors
 from sklearn.cluster import DBSCAN
 from sklearn import metrics
 
-from util import AverageMeter, learning_rate_decay, Logger
-from sklearn.cluster import KMeans
-
 class RegLog(nn.Module):
     """Creates logistic regression on top of frozen features"""
     def __init__(self, layer_num, num_labels):

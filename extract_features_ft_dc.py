@@ -1,13 +1,5 @@
-# Copyright (c) 2017-present, Facebook, Inc.
-# All rights reserved.
-#
-# This source code is licensed under the license found in the
-# LICENSE file in the root directory of this source tree.
-#
-
 import argparse
 import os
-import argparse
 import logging
 import random
 import sys
@@ -33,16 +25,6 @@ import matplotlib as mpl
 mpl.use('TkAgg')
 import matplotlib.pyplot as plt
 import torchvision.models as models
-
-from util import AverageMeter, learning_rate_decay, Logger
-from sklearn.cluster import KMeans
-
-def image_path_to_name(image_path):
-    # return np.string_(path.splitext(path.basename(image_path))[0])
-    parent, image_name = path.split(image_path)
-    image_name = path.splitext(image_name)[0]
-    parent = path.split(parent)[1]
-    return path.join(parent, image_name)
 
 class RegLog(nn.Module):
     """Creates logistic regression on top of frozen features"""
@@ -81,7 +63,6 @@ class RegLog(nn.Module):
         x = self.av_pool(x)
         x = x.view(x.size(0), x.size(1) * x.size(2) * x.size(3))
         return self.linear(x)
-
 
 def forward(x, model, conv):
     if hasattr(model, 'sobel') and model.sobel is not None:
@@ -143,18 +124,11 @@ def extract_features_to_disk(image_paths, model, batch_size, workers, reglog, la
         # compute fc features
         elif layer=='fc':
             current_features = model(input_var).data.cpu().numpy()
-        #print current_features.shape
         for j, image_path in enumerate(paths):
             features[image_path] = current_features[j]
     feature_shape = features[list(features.keys())[0]].shape
     logging.info('Feature shape: %s' % (feature_shape, ))
-    #logging.info('Outputting features')
 
-    if sys.version_info >= (3, 0):
-        string_type = h5py.special_dtype(vlen=str)
-    else:
-        string_type = h5py.special_dtype(vlen=unicode)  # noqa
-    #paths = features.keys()
     paths = image_paths
     logging.info('Stacking features')
     features_stacked = np.vstack([features[path] for path in paths])
@@ -183,7 +157,6 @@ def load_model(path):
 
         # build skeleton of the model
         sob = 'sobel.0.weight' in checkpoint['state_dict'].keys()
-        #model = models.__dict__[checkpoint['arch']](sobel=sob, out=int(N[0]))
 
         model = models.vgg16(pretrained=None)
         model.classifier = nn.Sequential(
@@ -238,15 +211,7 @@ def main():
 
     global args
     args = parser.parse_args()
-
-    #print args.output_features
-    #assert not path.exists(args.output_features)
-
-    #if args.output_log is None:
-    #    args.output_log = args.output_features + '.log'
-    #_set_logging(args.output_log)
-    #logging.info('Args: %s', args)
-
+    
     #fix random seeds
     torch.manual_seed(args.seed)
     torch.cuda.manual_seed_all(args.seed)
@@ -257,10 +222,6 @@ def main():
 
     # load model
     model = load_model(args.model)
-
-    #param = torch.load(args.model)
-    #model.load_state_dict(param)
-    #print(model)
 
     new_classifier = nn.Sequential(*list(model.classifier.children())[:-2])
     model.classifier = new_classifier
@@ -293,7 +254,6 @@ def main():
     c = 0
     for i in range(len(len_images)):
         cls = int(len_images[i])
-        #print cls
         plt.plot(reduction_result[c:c+cls-1,0], reduction_result[c:c+cls-1,1], ".", color=colormap[i])
         c += cls
     plt.savefig(filename + '_ft_' + layer + str(layer_num) + '.png')

@@ -8,6 +8,10 @@
 * Download images from http://www.manga109.org/ja/index.html
 * Extract characters' face images using extract_faces.py
 
+## Fine-Tuning
+* Fine tune VGG16 model for manga facial images using finetune/finetune_vgg.py
+* Fine-tuned weight is saved as checkpoint.tar
+
 ## References
 
 DeepCluster

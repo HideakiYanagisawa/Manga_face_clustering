@@ -2,12 +2,8 @@ import os
 import shutil
 import random
 
-IN_DIR = 'faces'
 TRAIN_DIR = 'train_images'
 TEST_DIR = 'test_images'
-
-if not os.path.exists(TRAIN_DIR):
-    os.mkdir(TRAIN_DIR)
 
 if not os.path.exists(TEST_DIR):
     os.mkdir(TEST_DIR)

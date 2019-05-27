@@ -5,6 +5,12 @@
  - Python2
  - [Pytorch](http://pytorch.org/)
 
+
+to do
+1. データセットのファイルパスを変更する。
+2. fine-tuneとDeepClusterの動作確認。
+3. データセットの構成を記述する。
+
 ## 1. Create manga face dataset
 * Download images from http://www.manga109.org/ja/index.html
 * Write manga titles using trainig and evaluation and save as 'finetune.txt' and 'eval.txt'

@@ -6,8 +6,8 @@ from PIL import Image, ImageFilter
 import xml.etree.ElementTree as ET
 
 if __name__ == '__main__':
-    image_set_file = '/home/dl-box/fine-tune/VOC2012/ImageSets/Main/finetune.txt'
-    data_path = '/home/dl-box/fine-tune/VOC2012' # folder name
+    image_set_file = 'finetune.txt'
+    data_path = '/home/dl-box/fine-tune/VOC2012' # Dataset folder
     images = [] # images
     classes = [] # character numbers 
     labels = [] # label of character images
@@ -44,7 +44,6 @@ if __name__ == '__main__':
         for page in root[1]:
             num_ind = int(page.get('index'))
             image_index = data_path + '/images/' + index + '/' + '{0:03d}'.format(num_ind) + '.jpg'
-            #print image_index
             im = Image.open(image_index)
             width = im.size[0]
             height = im.size[1]

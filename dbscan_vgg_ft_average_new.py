@@ -282,9 +282,6 @@ def main():
     # load model
     model = load_model(args.model, args.cls_num)
 
-    #param = torch.load(args.model)
-    #model.load_state_dict(param)
-    #print(model)
     if layer == 'fc':
         if layer_num == 1:
             new_classifier = nn.Sequential(*list(model.classifier.children())[:-2])
@@ -297,9 +294,7 @@ def main():
     cudnn.benchmark = True
     model.eval()
 
-    #filename = args.dataset
-
-    datasets = glob('/faces_83/evaluation/*')
+    datasets = glob('/faces/evaluation/*')
 
     V_MEASUREs = [0.0] * len(datasets)
     ARIs = [0.0] * len(datasets)

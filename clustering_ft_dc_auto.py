@@ -1,9 +1,5 @@
-# Copyright (c) 2017-present, Facebook, Inc.
-# All rights reserved.
-#
-# This source code is licensed under the license found in the
-# LICENSE file in the root directory of this source tree.
-#
+# Extract feature quantities and find clustering results that maximize AMI value.
+# Use UMAP for dimensional reduction.
 
 import argparse
 import os
@@ -12,7 +8,6 @@ import random
 import sys
 from os import path
 
-import h5py
 import numpy as np
 import torch
 import torch.nn as nn
@@ -36,13 +31,6 @@ from scipy.spatial import distance
 from sklearn.neighbors import NearestNeighbors
 from sklearn.cluster import DBSCAN
 from sklearn import metrics
-
-def image_path_to_name(image_path):
-    # return np.string_(path.splitext(path.basename(image_path))[0])
-    parent, image_name = path.split(image_path)
-    image_name = path.splitext(image_name)[0]
-    parent = path.split(parent)[1]
-    return path.join(parent, image_name)
 
 class RegLog(nn.Module):
     """Creates logistic regression on top of frozen features"""
@@ -124,7 +112,6 @@ def EpsDBSCAN(D, k):
     Array = sorted(Dist)
     AvgDist = distances.sum(axis=1)/k
     Avg_Array = sorted(AvgDist)
-    ##plt.plot(Avg_Array, 'b')
 
     num = len(Avg_Array)
     n_Array = [0 for i in range(num)]
@@ -144,7 +131,6 @@ def EpsDBSCAN(D, k):
         count = len(np.where(bin_indice == i)[0])
         if count >= k:
             e = np.sum(Avg_Array[bin_indice == i], axis=0)/count
-            ##plt.hlines(e, xmin=0, xmax=len(Array), colors='r')
             Eps.append(e)
 
     N = len(Eps)
@@ -163,15 +149,6 @@ def EpsDBSCAN(D, k):
     for i in range(N-1):
         slope = (Eps[i+1] - Eps[i]) / (Eps_index[i+1] - Eps_index[i])
         Slopes.append(slope)
-        ##if slope > old_slope and slope < old_slope * 1.1:
-        ##    out = Eps[i]
-        ##    break
-        #if i > 0 and slope > ave_slope:
-        #    out = Eps[i]
-        #    break
-        #else:
-        #    out = Eps[i+1]
-        #    old_slope = slope
 
     ave_slope = sum(Slopes)/len(Slopes)
 
@@ -181,25 +158,6 @@ def EpsDBSCAN(D, k):
             break
         else:
             out = Eps[i+1]
-
-    #if N % 2 == 0:
-    #    median1 = N/2
-    #    median2 = N/2 + 1
-    #    median1 = int(median1) - 1
-    #    median2 = int(median2) - 1
-    #    median = (Eps[median1] + Eps[median2]) / 2
-    #else:
-    #    median = (N + 1) / 2
-    #    median = int(median) - 1
-    #    median = Eps[median]
-
-    #out = median
-
-    #out = Avg_Array[int(num*0.8)]
-    #out = Array[int(num*0.8)]
-    out = float(sum(Eps)/len(Eps))
-
-    ##plt.show()
 
     return out
 
@@ -215,7 +173,7 @@ def EpsValue(D, k):
 
     return min(AvgDist), out
 
-def extract_features_to_disk(image_paths, model, batch_size, workers, reglog, layer, dim):
+def extract_features(image_paths, model, batch_size, workers, reglog, layer, dim):
     # Data loading code
     normalize = transforms.Normalize(
         mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
@@ -243,30 +201,15 @@ def extract_features_to_disk(image_paths, model, batch_size, workers, reglog, la
         # compute fc features
         elif layer=='fc':
             current_features = model(input_var).data.cpu().numpy()
-        #print current_features.shape
+            
         for j, image_path in enumerate(paths):
             features[image_path] = current_features[j]
     feature_shape = features[list(features.keys())[0]].shape
-    #logging.info('Feature shape: %s' % (feature_shape, ))
-    #logging.info('Outputting features')
-
-    if sys.version_info >= (3, 0):
-        string_type = h5py.special_dtype(vlen=str)
-    else:
-        string_type = h5py.special_dtype(vlen=unicode)  # noqa
-    #paths = features.keys()
+        
     paths = image_paths
-    #logging.info('Stacking features')
     features_stacked = np.vstack([features[path] for path in paths])
-    ##
-    #logging.info('Output feature size: %s' % (features_stacked.shape, ))
-
-    ##dim = 64
-    ##pca = KernelPCA(n_components=dim, kernel='cosine')
-    ##pca.fit(features_stacked)
-    ##reduction_result = pca.transform(features_stacked)
+    
     umap_model = umap.UMAP(n_components=dim)
-    ##reduction_result = umap_model.fit_transform(reduction_result)
     reduction_result = umap_model.fit_transform(features_stacked)
 
     return reduction_result
@@ -274,7 +217,6 @@ def extract_features_to_disk(image_paths, model, batch_size, workers, reglog, la
 def load_model(path, cls_num):
     """Loads model and return it without DataParallel table."""
     if os.path.isfile(path):
-        #print("=> loading checkpoint '{}'".format(path))
         checkpoint = torch.load(path)
 
         # size of the top layer
@@ -282,7 +224,6 @@ def load_model(path, cls_num):
 
         # build skeleton of the model
         sob = 'sobel.0.weight' in checkpoint['state_dict'].keys()
-        #model = models.__dict__[checkpoint['arch']](sobel=sob, out=int(N[0]))
 
         model = models.vgg16(pretrained=None)
         model.classifier = nn.Sequential(
@@ -322,7 +263,6 @@ def load_model(path, cls_num):
 
 def clustering_dbscan(result, MINPTS, labels_true):
     e = EpsDBSCAN(result, MINPTS)
-    #print e
     data_num = 0
     N = len(labels_true)
 
@@ -346,9 +286,8 @@ def clustering_dbscan(result, MINPTS, labels_true):
 def main():
 
     parser = argparse.ArgumentParser(description="""Train linear classifier on top
-                                 of frozen convolutional layers of an AlexNet.""")
-
-    #parser.add_argument('--dataset', type=str, help='target dataset')
+                                 of frozen convolutional layers of an VGG16.""")
+    
     parser.add_argument('--model', type=str, help='path to model')
     parser.add_argument('--layer', type=str, help='layer type')
     parser.add_argument('--layer_num', default=2, type=int, help='layer number')
@@ -358,14 +297,10 @@ def main():
     parser.add_argument('--batch_size', default=32, type=int,
                         help='mini-batch size (default: 32)')
     parser.add_argument('--dim', default=2, type=int, help='feature dimension')
-    #parser.add_argument('--seed', type=int, default=31, help='random seed')
 
     global args
 
     args = parser.parse_args()
-
-
-
 
     layer = args.layer
     layer_num = args.layer_num
@@ -400,6 +335,7 @@ def main():
     for filepath in datasets:
         filepath = filepath + '/'
         print filepath
+        #filepath = '/faces_83/evaluation/' + filename + '/'
         class_list = glob(filepath+'*')
         class_list = [os.path.basename(r) for r in class_list]
         class_num = len(class_list)
@@ -437,7 +373,7 @@ def main():
             torch.cuda.manual_seed_all(seed)
             np.random.seed(seed)
 
-            reduction_result=extract_features_to_disk(images, model, args.batch_size,
+            reduction_result=extract_features(images, model, args.batch_size,
                                                       args.workers, reglog, layer, args.dim)
 
             v_measure, ari, ami = clustering_dbscan(reduction_result, 10, labels)

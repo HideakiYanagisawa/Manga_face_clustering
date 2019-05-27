@@ -51,22 +51,6 @@ if __name__ == '__main__':
         nn.ReLU(True),
     )
     model.top_layer = nn.Linear(4096, 1222)
-
-    #grayscale = nn.Conv2d(3, 1, kernel_size=1, stride=1, padding=0)
-    #grayscale.weight.data.fill_(1.0 / 3.0)
-    #grayscale.bias.data.zero_()
-    #sobel_filter = nn.Conv2d(1, 2, kernel_size=3, stride=1, padding=1)
-    #sobel_filter.weight.data[0,0].copy_(
-    #    torch.FloatTensor([[1, 0, -1], [2, 0, -2], [1, 0, -1]])
-    #    )
-    #sobel_filter.weight.data[1,0].copy_(
-    #    torch.FloatTensor([[1, 2, 1], [0, 0, 0], [-1, -2, -1]])
-    #    )
-    #sobel_filter.bias.data.zero_()
-    #model.sobel = nn.Sequential(grayscale, sobel_filter)
-    #for p in model.sobel.parameters():
-    #    p.requires_grad = False
-
     def forward(self, x):
         x = self.features(x)
         x = x.view(x.size(0), -1)
@@ -76,18 +60,6 @@ if __name__ == '__main__':
         return x
 
     model.cuda()
-
-    #  transform = transforms.Compose([
-    #    transforms.Resize((224, 224), interpolation=Image.BICUBIC),
-    #    transforms.ToTensor()
-    #])
-    #train_set = datasets.CIFAR100(root='../data', train=True, transform=transform, download=True)
-    #test_set = datasets.CIFAR100(root='../data', train=False, transform=transform, download=True)
-    #batch_size = 50
-    #train_loader = torch.utils.data.DataLoader(
-    #    train_set, batch_size=batch_size, shuffle=True, num_workers=1, pin_memory=True)
-    #test_loader = torch.utils.data.DataLoader(
-    #    test_set, batch_size=batch_size, shuffle=True, num_workers=1, pin_memory=True)
 
     traindir = ('/faces_83/train_images')
     testdir = ('/faces_83/test_images')
@@ -128,13 +100,4 @@ if __name__ == '__main__':
         print('epoch :', epoch)
         trainer.train_epoch()
         test(model, test_loader)
-        # save running checkpoint
-        #torch.save({'epoch': epoch + 1,
-        #            'arch': 'vgg16',
-        #            'state_dict': model.state_dict(),
-        #            'optimizer' : optimizer.state_dict()},
-        #            'checkpoint.pth.tar')
         torch.save(model.state_dict(), './checkpoint.tar')
-
-        # save cluster assignments
-        #cluster_log.log(deepcluster.images_lists)

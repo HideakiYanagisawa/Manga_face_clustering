@@ -82,6 +82,7 @@ def main():
             x = self.top_layer(x)
         return x
 
+    # Load fine-tuned weights
     param = torch.load('./finetune/checkpoint.tar')
     model.load_state_dict(param)
     fd = int(model.top_layer.weight.size()[1])

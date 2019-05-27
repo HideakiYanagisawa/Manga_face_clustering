@@ -6,8 +6,8 @@ from PIL import Image, ImageFilter
 import xml.etree.ElementTree as ET
 
 if __name__ == '__main__':
-    image_set_file = '/home/dl-box/fine-tune/VOC2012/ImageSets/Main/finetune.txt'
-    data_path = '/home/dl-box/fine-tune/VOC2012'
+    image_set_file = 'finetune.txt'
+    data_path = '/home/dl-box/fine-tune/Manga109' # folder name
     images = [] # images
     classes = [] # character numbers 
     labels = [] # label of character images

@@ -82,7 +82,7 @@ def main():
             x = self.top_layer(x)
         return x
 
-    param = torch.load('/deepcluster/finetune/checkpoint.tar')
+    param = torch.load('./finetune/checkpoint.tar')
     model.load_state_dict(param)
     fd = int(model.top_layer.weight.size()[1])
     model.top_layer = None

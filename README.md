@@ -13,6 +13,11 @@
 * Fine tune VGG16 model for manga facial images using finetune/finetune_vgg.py
 * Fine-tuned weight is saved as checkpoint.tar
 
+## Train DeepCluster using fine-tuned weight
+* Use deepcluster_finetuned_model.py
+* Example:
+python deepcluster_finetuned_model.py {dataset derectory} --exp exp_vgg_ft --arch vgg16 --lr 0.05 --wd -5 --k 3000 --sobel --verbose --workers 0 --batch 32 --epochs 200
+
 ## References
 
 DeepCluster

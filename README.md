@@ -4,8 +4,7 @@
  - Python2
  - [Pytorch](http://pytorch.org/)
 
-1. Create manga face dataset
-
+## Create manga face dataset
 Download manga images from http://www.manga109.org/ja/index.html
 
 Extract characters' face images using 

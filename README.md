@@ -19,7 +19,7 @@
 
 ## 4. Clustering evaluation
 * Calcurate the average value of 10 clustering results for character face images of each title in the test set.
-* example: python dbscan_vgg_average_new_auto.py --model {directory deepcluster model} --layer fc --layer_num 1 --dim 256
+* example: python clustering_ft_dc_auto.py --model {directory deepcluster model} --layer fc --layer_num 1 --dim 256
 
 ## References
 

@@ -61,8 +61,8 @@ if __name__ == '__main__':
 
     model.cuda()
 
-    traindir = ('/faces_83/train_images')
-    testdir = ('/faces_83/test_images')
+    traindir = ('/dataset/train_images')
+    testdir = ('/dataset/test_images')
     normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                      std=[0.229, 0.224, 0.225])
 

@@ -37,9 +37,6 @@ from sklearn.neighbors import NearestNeighbors
 from sklearn.cluster import DBSCAN
 from sklearn import metrics
 
-from util import AverageMeter, learning_rate_decay, Logger
-from sklearn.cluster import KMeans
-
 def image_path_to_name(image_path):
     # return np.string_(path.splitext(path.basename(image_path))[0])
     parent, image_name = path.split(image_path)

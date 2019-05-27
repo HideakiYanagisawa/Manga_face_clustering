@@ -196,8 +196,7 @@ def load_model(path):
 
 def main():
 
-    parser = argparse.ArgumentParser(description="""Train linear classifier on top
-                                 of frozen convolutional layers of an AlexNet.""")
+    parser = argparse.ArgumentParser(description="""Extract image features of manga facial images""")
 
     parser.add_argument('--dataset', type=str, help='target dataset')
     parser.add_argument('--model', type=str, help='path to model')

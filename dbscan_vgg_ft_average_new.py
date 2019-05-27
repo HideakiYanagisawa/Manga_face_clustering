@@ -5,9 +5,11 @@
 # LICENSE file in the root directory of this source tree.
 #
 
+# Extract feature quantities and find clustering results that maximize AMI value.
+# Use UMAP for dimensional reduction.
+
 import argparse
 import os
-import argparse
 import logging
 import random
 import sys
@@ -40,13 +42,6 @@ from sklearn import metrics
 
 from util import AverageMeter, learning_rate_decay, Logger
 from sklearn.cluster import KMeans
-
-def image_path_to_name(image_path):
-    # return np.string_(path.splitext(path.basename(image_path))[0])
-    parent, image_name = path.split(image_path)
-    image_name = path.splitext(image_name)[0]
-    parent = path.split(parent)[1]
-    return path.join(parent, image_name)
 
 class RegLog(nn.Module):
     """Creates logistic regression on top of frozen features"""
@@ -119,64 +114,6 @@ class ListDataset(torch.utils.data.Dataset):
     def __len__(self):
         return len(self.images_list)
 
-def EpsDBSCAN(D, k):
-    nn = NearestNeighbors(n_neighbors=k+1)
-    nn.fit(D)
-    distances, indices = nn.kneighbors(D)
-    distances = np.delete(distances, 0, 1)
-    Dist = distances.max(axis=1)
-    Array = sorted(Dist)
-    AvgDist = distances.sum(axis=1)/k
-    Avg_Array = sorted(AvgDist)
-    plt.plot(Avg_Array, 'b')
-
-    num = len(Avg_Array)
-    n_Array = [0 for i in range(num)]
-    minArray = min(Avg_Array)
-    maxArray = max(Avg_Array)
-
-    for i in range(num):
-        n_Array[i] = (Avg_Array[i]-minArray)/(maxArray-minArray)*(1.0-0.0)
-
-    bins = np.linspace(0, 1, 10)
-    bin_indice = np.digitize(n_Array, bins)
-    Eps = []
-    Avg_Array = np.array(Avg_Array)
-    count_max = 0
-
-    for i in range(10):
-        count = len(np.where(bin_indice == i)[0])
-        if count >= k:
-            #print count
-            e = np.sum(Avg_Array[bin_indice == i], axis=0)/count
-            plt.hlines(e, xmin=0, xmax=len(Array), colors='r')
-            Eps.append(e)
-
-    N = len(Eps)
-    Eps_index = []
-
-    for i in range(N):
-        for j in range(num):
-            if Avg_Array[j] > Eps[i]:
-                Eps_index.append(j)
-                break
-
-    ave_slope = (maxArray - minArray)/num
-    
-    #print 'ave slope'
-    #print ave_slope
-    #print ''
-    for i in range(N-1):
-        slope = (Eps[i+1] - Eps[i]) / (Eps_index[i+1] - Eps_index[i])
-        #print slope
-        if slope > ave_slope * 2:
-            out = Eps[i]
-            break
-        else:
-            out = Eps[i+1]
-
-    return Eps
-
 def EpsValue(D, k):
     nn = NearestNeighbors(n_neighbors=k+1)
     nn.fit(D)
@@ -217,30 +154,20 @@ def extract_features_to_disk(image_paths, model, batch_size, workers, reglog, la
         # compute fc features
         elif layer=='fc':
             current_features = model(input_var).data.cpu().numpy()
-        #print current_features.shape
+            
         for j, image_path in enumerate(paths):
             features[image_path] = current_features[j]
     feature_shape = features[list(features.keys())[0]].shape
-    #logging.info('Feature shape: %s' % (feature_shape, ))
-    #logging.info('Outputting features')
 
     if sys.version_info >= (3, 0):
         string_type = h5py.special_dtype(vlen=str)
     else:
-        string_type = h5py.special_dtype(vlen=unicode)  # noqa
-    #paths = features.keys()
+        string_type = h5py.special_dtype(vlen=unicode)
+        
     paths = image_paths
-    #logging.info('Stacking features')
     features_stacked = np.vstack([features[path] for path in paths])
-    ##
-    #logging.info('Output feature size: %s' % (features_stacked.shape, ))
-
-    ##dim = 64
-    ##pca = KernelPCA(n_components=dim, kernel='cosine')
-    ##pca.fit(features_stacked)
-    ##reduction_result = pca.transform(features_stacked)
+    
     umap_model = umap.UMAP(n_components=dim)
-    ##reduction_result = umap_model.fit_transform(reduction_result)
     reduction_result = umap_model.fit_transform(features_stacked)
 
     return reduction_result
@@ -248,7 +175,6 @@ def extract_features_to_disk(image_paths, model, batch_size, workers, reglog, la
 def load_model(path, cls_num):
     """Loads model and return it without DataParallel table."""
     if os.path.isfile(path):
-        #print("=> loading checkpoint '{}'".format(path))
         checkpoint = torch.load(path)
 
         # size of the top layer
@@ -256,7 +182,6 @@ def load_model(path, cls_num):
 
         # build skeleton of the model
         sob = 'sobel.0.weight' in checkpoint['state_dict'].keys()
-        #model = models.__dict__[checkpoint['arch']](sobel=sob, out=int(N[0]))
 
         model = models.vgg16(pretrained=None)
         model.classifier = nn.Sequential(
@@ -348,9 +273,8 @@ def clustering_dbscan(result, MINPTS, labels_true):
 def main():
 
     parser = argparse.ArgumentParser(description="""Train linear classifier on top
-                                 of frozen convolutional layers of an AlexNet.""")
-
-    #parser.add_argument('--dataset', type=str, help='target dataset')
+                                 of frozen convolutional layers of an VGG16.""")
+    
     parser.add_argument('--model', type=str, help='path to model')
     parser.add_argument('--layer', type=str, help='layer type')
     parser.add_argument('--layer_num', default=2, type=int, help='layer number')
@@ -360,7 +284,6 @@ def main():
     parser.add_argument('--batch_size', default=32, type=int,
                         help='mini-batch size (default: 32)')
     parser.add_argument('--dim', default=2, type=int, help='feature dimension')
-    #parser.add_argument('--seed', type=int, default=31, help='random seed')
 
     global args
 

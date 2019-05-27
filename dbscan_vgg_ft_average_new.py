@@ -15,7 +15,6 @@ import random
 import sys
 from os import path
 
-import h5py
 import numpy as np
 import torch
 import torch.nn as nn
@@ -158,11 +157,6 @@ def extract_features_to_disk(image_paths, model, batch_size, workers, reglog, la
         for j, image_path in enumerate(paths):
             features[image_path] = current_features[j]
     feature_shape = features[list(features.keys())[0]].shape
-
-    if sys.version_info >= (3, 0):
-        string_type = h5py.special_dtype(vlen=str)
-    else:
-        string_type = h5py.special_dtype(vlen=unicode)
         
     paths = image_paths
     features_stacked = np.vstack([features[path] for path in paths])

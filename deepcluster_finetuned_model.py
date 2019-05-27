@@ -1,9 +1,3 @@
-# Copyright (c) 2017-present, Facebook, Inc.
-# All rights reserved.
-#
-# This source code is licensed under the license found in the
-# LICENSE file in the root directory of this source tree.
-#
 import argparse
 import os
 import pickle
@@ -23,7 +17,6 @@ import torchvision.datasets as datasets
 import torchvision.models as models
 
 import clustering
-#import models
 from util import AverageMeter, Logger, UnifLabelSampler, load_model
 
 parser = argparse.ArgumentParser(description='PyTorch Implementation of DeepCluster')
@@ -71,9 +64,6 @@ def main():
     np.random.seed(args.seed)
 
     # CNN
-    #if args.verbose:
-    #    print('Architecture: {}'.format(args.arch))
-    #model = models.__dict__[args.arch](sobel=args.sobel)
     model = models.vgg16(pretrained=None)
     model.classifier = nn.Sequential(
         nn.Linear(512 * 7 * 7, 4096),

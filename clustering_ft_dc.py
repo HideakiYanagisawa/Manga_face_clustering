@@ -304,9 +304,6 @@ def main():
         class_list = [os.path.basename(r) for r in class_list]
         class_num = len(class_list)
 
-        ex_class_list = class_list
-        ex_class_list.remove('other')
-
         len_images = []
         images = []
         labels = []
@@ -318,11 +315,6 @@ def main():
             label = [n] * len(class_images)
             labels.extend(label)
             n += 1
-
-        ex_len_images = []
-        for class_name in ex_class_list:
-            class_images = glob(filepath+class_name+'/*.jpg')
-            ex_len_images.append(float(len(class_images)))
 
         # logistic regression
         reglog = RegLog(layer_num, 10000).cuda()

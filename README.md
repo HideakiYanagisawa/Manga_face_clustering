@@ -1,6 +1,6 @@
 # Manga_face_clustering
 * Clustering character facial images in manga using DBSCAN.
-* btain the image features from CNN middle layer, using fine-tuning and DeepClustering.
+* Obtain the image features from CNN middle layer, using fine-tuning and DeepClustering.
 ## Enviroment
  - Python2
  - [Pytorch](http://pytorch.org/)

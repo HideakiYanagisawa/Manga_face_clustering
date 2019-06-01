@@ -23,7 +23,7 @@ to do
 
 ## 3. Train DeepCluster using fine-tuned weight
 * Use deepcluster_finetuned_model.py
-* example: python deepcluster_finetuned_model.py {dataset derectory} --exp exp_vgg_ft --arch vgg16 --lr 0.05 --wd -5 --k 3000 --sobel --verbose --workers 0 --batch 32 --epochs 200
+* example: python deepcluster_finetuned_model.py {dataset derectory} --exp exp_vgg_ft --arch vgg16 --lr 0.005 --wd -5 --k 3000 --sobel --verbose --workers 0 --batch 32 --epochs 200
 
 ## 4. Clustering evaluation
 * Calcurate the average value of 10 clustering results for character face images of each title in the test set.

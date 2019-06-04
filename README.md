@@ -5,11 +5,6 @@
  - Python2
  - [Pytorch](http://pytorch.org/)
 
-
-to do
-1.データセットの構成を記述する
-2.Deepcluster動作確認
-
 ## 1. Create manga face dataset
 * Download images from http://www.manga109.org/ja/index.html
 * Write manga titles using trainig and evaluation and save as 'finetune.txt' and 'eval.txt'

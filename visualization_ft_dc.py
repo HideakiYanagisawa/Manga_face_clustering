@@ -221,8 +221,8 @@ def main():
 
     # load model
     model = load_model(args.model)
-
-    new_classifier = nn.Sequential(*list(model.classifier.children())[:-2])
+    model.top_layer = None
+    new_classifier = nn.Sequential(*list(model.classifier.children())[:-4])
     model.classifier = new_classifier
 
     model.cuda()

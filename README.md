@@ -31,3 +31,6 @@ https://github.com/facebookresearch/deepcluster
 
 feature_extraction
 https://github.com/achalddave/pytorch-extract-features
+
+ArcFace
+https://github.com/ronghuaiyang/arcface-pytorch/blob/master/models/metrics.py

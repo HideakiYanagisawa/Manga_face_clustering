@@ -277,10 +277,10 @@ def main():
 
     # load model
     model = load_model(args.model, args.cls_num)
-
+    model.top_layer = None
     if layer == 'fc':
         if layer_num == 1:
-            new_classifier = nn.Sequential(*list(model.classifier.children())[:-2])
+            new_classifier = nn.Sequential(*list(model.classifier.children())[:-4])
             model.classifier = new_classifier
         if layer_num == 2:
             new_classifier = nn.Sequential(*list(model.classifier.children())[:-1])

@@ -1,19 +1,10 @@
-# Copyright (c) 2017-present, Facebook, Inc.
-# All rights reserved.
-#
-# This source code is licensed under the license found in the
-# LICENSE file in the root directory of this source tree.
-#
-
 import argparse
 import os
-import argparse
 import logging
 import random
 import sys
 from os import path
 
-import h5py
 import numpy as np
 import torch
 import torch.nn as nn
@@ -40,13 +31,6 @@ from sklearn import metrics
 import torch.nn.functional as F
 from torch.nn import Parameter
 import math
-
-def image_path_to_name(image_path):
-    # return np.string_(path.splitext(path.basename(image_path))[0])
-    parent, image_name = path.split(image_path)
-    image_name = path.splitext(image_name)[0]
-    parent = path.split(parent)[1]
-    return path.join(parent, image_name)
 
 class RegLog(nn.Module):
     """Creates logistic regression on top of frozen features"""
@@ -225,17 +209,7 @@ def extract_features_to_disk(image_paths, model, batch_size, workers, reglog, la
     #logging.info('Feature shape: %s' % (feature_shape, ))
     #logging.info('Outputting features')
 
-    if sys.version_info >= (3, 0):
-        string_type = h5py.special_dtype(vlen=str)
-    else:
-        string_type = h5py.special_dtype(vlen=unicode)  # noqa
-    #paths = features.keys()
-    paths = image_paths
-    #logging.info('Stacking features')
     features_stacked = np.vstack([features[path] for path in paths])
-    ##
-    #logging.info('Output feature size: %s' % (features_stacked.shape, ))
-
     ##dim = 64
     ##pca = KernelPCA(n_components=dim, kernel='cosine')
     ##pca.fit(features_stacked)

@@ -271,7 +271,7 @@ def clustering_dbscan(result, MINPTS, labels_true):
 
     return best_v_measure, best_ari, best_ami
 
-
+## https://github.com/ronghuaiyang/arcface-pytorch/blob/master/models/metrics.py
 class ArcMarginProduct(nn.Module):
     r"""Implement of large margin arc distance: :
         Args:
@@ -321,8 +321,7 @@ def main():
 
     parser = argparse.ArgumentParser(description="""Train linear classifier on top
                                  of frozen convolutional layers of an AlexNet.""")
-
-    #parser.add_argument('--dataset', type=str, help='target dataset')
+    
     parser.add_argument('--model', type=str, help='path to model')
     parser.add_argument('--layer', type=str, help='layer type')
     parser.add_argument('--layer_num', default=2, type=int, help='layer number')
@@ -332,7 +331,6 @@ def main():
     parser.add_argument('--batch_size', default=32, type=int,
                         help='mini-batch size (default: 32)')
     parser.add_argument('--dim', default=2, type=int, help='feature dimension')
-    #parser.add_argument('--seed', type=int, default=31, help='random seed')
 
     global args
 
@@ -342,7 +340,6 @@ def main():
     layer = args.layer
     layer_num = args.layer_num
 
-    # load model
     # load model
     model = models.vgg16(pretrained=None)
     model.classifier = nn.Sequential(
@@ -364,11 +361,11 @@ def main():
 
     param = torch.load(args.model)
     model.load_state_dict(param)
+    model.top_layer = None
 
-    #print(model)
     if layer == 'fc':
         if layer_num == 1:
-            new_classifier = nn.Sequential(*list(model.classifier.children())[:-3])
+            new_classifier = nn.Sequential(*list(model.classifier.children())[:-4])
             model.classifier = new_classifier
         if layer_num == 2:
             new_classifier = nn.Sequential(*list(model.classifier.children())[:-1])
@@ -390,7 +387,6 @@ def main():
     for filepath in datasets:
         filepath = filepath + '/'
         print(filepath)
-        #filepath = '/faces_83/evaluation/' + filename + '/'
         class_list = glob(filepath+'*')
         class_list = [os.path.basename(r) for r in class_list]
         class_num = len(class_list)

@@ -16,11 +16,6 @@ from torchvision.datasets.folder import default_loader
 from tqdm import tqdm
 from glob import glob
 import umap
-#from matplotlib import pyplot as plt
-import matplotlib as mpl
-mpl.use('TkAgg')
-import matplotlib.pyplot as plt
-#import math
 from scipy.spatial import distance
 from sklearn import metrics
 from sklearn.neighbors import NearestNeighbors

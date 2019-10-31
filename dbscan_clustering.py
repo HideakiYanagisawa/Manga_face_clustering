@@ -294,7 +294,7 @@ def clustering_optics(result, MINPTS, labels_true):
 
 def main():
 
-    parser = argparse.ArgumentParser(description="""Classtering images using fine-tuned VGG16 model""")
+    parser = argparse.ArgumentParser(description="""Classtering images using fine-tuned CNN""")
     parser.add_argument('--model', type=str, help='path to model')
     parser.add_argument('--cnn', type=str, help='model archtecture')
     parser.add_argument('--layer', type=str, help='layer type')
@@ -316,9 +316,7 @@ def main():
         model.classifier = nn.Sequential(*list(model.classifier.children())[:-1])
         model.top_layer = nn.Linear(4096, 1222)
         param = torch.load(args.model)
-        model = DataParallel(model) # for vgg_old
         model.load_state_dict(param)
-        model = model.module # for vgg_old
         
         if args.layer == 'fc':
             if args.layer_num == 1:
@@ -327,23 +325,7 @@ def main():
                 new_classifier = nn.Sequential(*list(model.classifier.children())[:-2])
             model.classifier = new_classifier
 
-        model.top_layer =  Identity() #10/18
-        #model.top_layer = None
-
-        """ 
-        model.top_layer = None
-        model = DataParallel(model)
-
-        layer = args.layer
-        layer_num = args.layer_num
-        if layer == 'fc':
-            if layer_num == 1:
-                new_classifier = nn.Sequential(*list(model.classifier.children())[:-5])
-                model.classifier = new_classifier
-            if layer_num == 2:
-                new_classifier = nn.Sequential(*list(model.classifier.children())[:-2])
-                model.classifier = new_classifier
-         """
+        model.top_layer =  Identity()
 
     if args.cnn == 'resnet50':
         model = models.resnet50(pretrained=None)

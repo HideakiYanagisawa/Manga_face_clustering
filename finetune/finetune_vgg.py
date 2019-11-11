@@ -47,21 +47,10 @@ def test(model, test_loader):
 if __name__ == '__main__':
 
     model = models.vgg16(pretrained=True)
-    #print(model)
     for p in model.features.parameters():
         p.requires_grad = False
-    """
-    model.classifier = nn.Sequential(
-        nn.Linear(512 * 7 * 7, 4096),
-        nn.ReLU(True),
-        nn.Dropout(0.5),
-        nn.Linear(4096, 4096),
-        nn.ReLU(True),
-    )
-    """
     model.classifier = nn.Sequential(*list(model.classifier.children())[:-1])
     model.top_layer = nn.Linear(4096, 1222)
-    #print(model)
     #model.cuda()
     model.to('cuda')
     model = DataParallel(model)

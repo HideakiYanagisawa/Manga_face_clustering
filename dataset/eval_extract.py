@@ -7,7 +7,7 @@ import xml.etree.ElementTree as ET
 
 if __name__ == '__main__':
     image_set_file = 'eval.txt'
-    data_path = '/home/dl-box/fine-tune/Manga109' # Dataset folder
+    data_path = '/home/dl-box/dataset/Manga109' # Dataset folder
     images = [] # images
     classes = [] # character numbers 
     labels = [] # label of character images

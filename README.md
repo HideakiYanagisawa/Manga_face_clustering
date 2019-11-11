@@ -23,7 +23,7 @@
 * Extract characters' face images for training using dataset/train_extract.py
 * Manga109のアノテーションデータに従い、dataset/train_extract.pyで学習用の顔画像データを抽出。
 * Split trainig images into 'train_images' and 'test_images' using dataset/setup.py
-
+* dataset/setup.pyでtrain_imageファイル内の一部の画像をtest_imageファイルへ分割できる。
 * Extract characters' face images for evaluation using dataset/eval_extract.py
 * dataset/eval_extract.pyで評価用の顔画像データを抽出。
 

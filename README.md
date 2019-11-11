@@ -1,8 +1,9 @@
 # Manga_face_clustering
-* Clustering character facial images in manga using DBSCAN.
-* Obtain the image features from CNN middle layer, using fine-tuning and DeepClustering.
+* Classify character face images using density-based clustering.
+* Obtain the image features from fine-tuned CNN middle layer.
+
 ## Enviroment
- - Python2
+ - Python3
  - [Pytorch](http://pytorch.org/)
 
 ## 1. Create manga face dataset
@@ -13,24 +14,27 @@
 * Extract characters' face images for evaluation using eval_extract.py
 
 ## 2. Fine-Tuning
-* Fine tune VGG16 model for manga facial images using finetune/finetune_vgg.py
+* Fine tune VGG16 or ResNet50 or ResNet101 for manga face images using finetune/finetune_vgg.py or finetune/finetune_resnet.py
 * Fine-tuned weight is saved as checkpoint.tar
 
-## 3. Train DeepCluster using fine-tuned weight
-* Use deepcluster_finetuned_model.py
-* example: python deepcluster_finetuned_model.py {dataset derectory} --exp exp_vgg_ft --arch vgg16 --lr 0.0001 --wd -5 --k 3000 --sobel --verbose --workers 0 --batch 32 --epochs 200
+## 3. visualization
+* Visualize image features for character face images in 1 manga book.
+* example: python viualize.py --dataset {manga title in evaluation files} --model {fine-tuned model} --layer fc
 
 ## 4. Clustering evaluation
 * Calcurate the average value of 10 clustering results for character face images of each title in the test set.
-* example: python clustering_ft_dc_auto.py --model {directory deepcluster model} --layer fc --layer_num 1 --dim 256
+* example: python clustering_dbscan.py --model {directory deepcluster model} --layer fc --layer_num 1 --dim 256
 
 ## References
 
-DeepCluster
-https://github.com/facebookresearch/deepcluster
+UMAP
+https://github.com/lmcinnes/umap
 
-feature_extraction
-https://github.com/achalddave/pytorch-extract-features
+DBSCAN
+https://scikit-learn.org/stable/modules/generated/sklearn.cluster.DBSCAN.html
 
-ArcFace
-https://github.com/ronghuaiyang/arcface-pytorch/blob/master/models/metrics.py
+OPTICS
+https://scikit-learn.org/stable/modules/generated/sklearn.cluster.OPTICS.html
+
+HDBSCAN
+https://github.com/scikit-learn-contrib/hdbscan

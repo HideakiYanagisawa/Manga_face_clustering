@@ -19,11 +19,11 @@
 
 ## 3. visualization
 * Visualize image features for character face images in 1 manga book.
-* example: python viualize.py --dataset {manga title in evaluation files} --model {fine-tuned model} --layer fc
+* python viualize.py --dataset {manga title in evaluation files} --cnn {vgg16 | resnet50 | resnet101} --model {fine-tuned model} --layer {fc | conv (only vgg16)} --layer_num 2 --clustering {dbscan | optics | hdbscan}
 
 ## 4. Clustering evaluation
 * Calcurate the average value of 10 clustering results for character face images of each title in the test set.
-* example: python clustering_dbscan.py --model {directory deepcluster model} --layer fc --layer_num 1 --dim 256
+* python clustering_dbscan.py  --cnn {vgg16 | resnet50 | resnet101} --model {fine-tuned model} --layer {fc | conv (only vgg16)} --layer_num 2 --clustering {dbscan | optics | hdbscan} --dim 32
 
 ## References
 
